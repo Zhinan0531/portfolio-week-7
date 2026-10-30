@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>English Word Quiz — Let's learning English</title>
+  <meta name="description" content="A cute picture quiz that helps children aged 3–6 learn their first English words." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ---------- Base ---------- */
+    :root {
+      --ink: #3b4a6b;
+      --ink-soft: #6b7a99;
+      --card: #ffffff;
+      --orange: #ff9f43;
+      --orange-deep: #ef8a2a;
+      --green: #34c98a;
+      --green-deep: #25a86f;
+      --red: #ff5f6d;
+      --red-deep: #e64b58;
+      --blue: #4cc3f5;
+      --purple: #a78bfa;
+      --radius: 28px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      font-family: "Baloo 2", "Comic Sans MS", "Chalkboard SE", "Segoe UI Rounded", system-ui, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(160deg, #d6f2ff 0%, #e9f9ff 35%, #fff3e8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    [hidden] { display: none !important; }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .screen {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ---------- Home ---------- */
+    .home-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 620px;
+      padding: 2.6rem 2rem 2.2rem;
+      text-align: center;
+      background: var(--card);
+      border: 6px solid #ffffff;
+      border-radius: 40px;
+      box-shadow: 0 18px 40px rgba(80, 140, 190, 0.22), 0 0 0 4px #e3f4ff;
+      animation: pop 0.5s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+    }
+
+    .home-badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      margin-bottom: 1.1rem;
+      font-size: 0.875rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: #4a8fb3;
+      background: #e8f7ff;
+      border-radius: 999px;
+    }
+
+    .home-title {
+      margin: 0;
+      font-size: clamp(2.2rem, 7vw, 3.6rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.01em;
+      animation: bob 3s ease-in-out infinite;
+    }
+
+    .home-title .w1 { color: var(--orange); }
+    .home-title .w2 { color: var(--purple); }
+    .home-title .w3 { color: var(--green); }
+
+    .home-sub {
+      margin: 1.1rem auto 1.8rem;
+      max-width: 26rem;
+      font-size: clamp(1rem, 2.6vw, 1.15rem);
+      font-weight: 600;
+      line-height: 1.5;
+      color: var(--ink-soft);
+    }
+
+    .btn {
+      border: 0;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 800;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .btn:focus-visible {
+      outline: 4px solid #7fd4ff;
+      outline-offset: 4px;
+    }
+
+    .btn--start {
+      padding: 1rem 3rem;
+      font-size: clamp(1.35rem, 4vw, 1.7rem);
+      color: #fff;
+      background: linear-gradient(180deg, #ffb15c, var(--orange));
+      border-radius: 999px;
+      box-shadow: 0 8px 0 var(--orange-deep), 0 14px 22px rgba(239, 138, 42, 0.35);
+      animation: pulse 2.2s ease-in-out infinite;
+    }
+
+    .btn--start:hover { transform: translateY(-2px); }
+
+    .btn--start:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 var(--orange-deep);
+    }
+
+    .home-hint {
+      margin: 1.1rem 0 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #9aa8c2;
+    }
+
+    /* Floating decorations */
+    .deco {
+      position: absolute;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      opacity: 0.9;
+      animation: float 5s ease-in-out infinite;
+      pointer-events: none;
+      user-select: none;
+    }
+    .deco--1 { top: -6%; left: 2%; animation-delay: 0s; }
+    .deco--2 { top: 8%; right: 1%; animation-delay: 1.2s; }
+    .deco--3 { bottom: 2%; left: 6%; animation-delay: 2.1s; }
+    .deco--4 { bottom: -4%; right: 8%; animation-delay: 0.7s; }
+
+    /* ---------- Quiz ---------- */
+    .quiz {
+      width: 100%;
+      max-width: 640px;
+      padding: 1.3rem 1.1rem 1.5rem;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.78);
+      border: 4px solid #ffffff;
+      border-radius: 36px;
+      box-shadow: 0 16px 34px rgba(80, 140, 190, 0.18);
+      animation: pop 0.4s ease-out both;
+    }
+
+    .quiz-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0 0.4rem 0.6rem;
+    }
+
+    .stars {
+      display: flex;
+      gap: 0.25rem;
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .stars .star {
+      color: #d9e6f2;
+      transition: color 0.25s ease, transform 0.25s ease;
+    }
+
+    .stars .star.is-on {
+      color: #ffc93c;
+      transform: scale(1.08);
+      text-shadow: 0 2px 0 #e0a800;
+    }
+
+    .quiz-count {
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .picture {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .picture img {
+      width: min(58vw, 300px);
+      height: min(58vw, 300px);
+      object-fit: contain;
+      background: #ffffff;
+      border: 6px solid #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 10px 0 #e2f1fb, 0 16px 30px rgba(80, 140, 190, 0.16);
+      animation: pop 0.45s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+    }
+
+    .quiz-prompt {
+      margin: 0 0 1rem;
+      font-size: clamp(1.3rem, 3.6vw, 1.6rem);
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.85rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .answer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 74px;
+      padding: 0.8rem 0.9rem;
+      font-family: inherit;
+      font-size: clamp(1.25rem, 4vw, 1.6rem);
+      font-weight: 700;
+      color: var(--ink);
+      background: #ffffff;
+      border: 4px solid #dcecf7;
+      border-radius: 22px;
+      box-shadow: 0 6px 0 #dcecf7;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease,
+                  border-color 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+
+    .answer:hover { transform: translateY(-2px); border-color: #bfe3f7; }
+    .answer:active { transform: translateY(4px); box-shadow: 0 2px 0 #dcecf7; }
+    .answer:focus-visible { outline: 4px solid #7fd4ff; outline-offset: 3px; }
+
+    .answer__word { line-height: 1.1; }
+
+    .answer__mark {
+      display: inline-block;
+      min-width: 1.1em;
+      font-size: 1.5rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .answer.is-wrong {
+      color: var(--red-deep);
+      background: #fff1f2;
+      border-color: var(--red);
+      box-shadow: 0 6px 0 #ffd3d7;
+      animation: shake 0.35s ease;
+      cursor: default;
+    }
+
+    .answer.is-correct {
+      color: #1c7d55;
+      background: #e9fbf3;
+      border-color: var(--green);
+      box-shadow: 0 6px 0 #bdecd7;
+      transform: translateY(-2px) scale(1.02);
+      cursor: default;
+    }
+
+    .answer.is-dim {
+      opacity: 0.55;
+      filter: grayscale(0.35);
+      pointer-events: none;
+    }
+
+    .answers.is-locked .answer { pointer-events: none; }
+
+    .feedback {
+      min-height: 1.9rem;
+      margin: 1rem 0 0;
+      font-size: clamp(1rem, 3vw, 1.15rem);
+      font-weight: 800;
+    }
+
+    .feedback--bad { color: var(--red-deep); }
+    .feedback--good { color: var(--green-deep); }
+    .feedback.is-bounce { animation: pop 0.3s ease both; }
+
+    /* ---------- Win ---------- */
+    .win-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 600px;
+      padding: 2.4rem 1.8rem 2.2rem;
+      text-align: center;
+      background: var(--card);
+      border: 6px solid #ffffff;
+      border-radius: 40px;
+      box-shadow: 0 18px 40px rgba(120, 100, 190, 0.24), 0 0 0 4px #f0eaff;
+      animation: pop 0.5s cubic-bezier(0.22, 1.2, 0.36, 1) both;
+    }
+
+    .win-kicker {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--orange-deep);
+    }
+
+    .win-title {
+      margin: 0.4rem 0 0.6rem;
+      font-size: clamp(2.2rem, 7vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--purple);
+      animation: bob 2.4s ease-in-out infinite;
+    }
+
+    .win-sub {
+      margin: 0 0 1.4rem;
+      font-size: clamp(1rem, 2.8vw, 1.15rem);
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+
+    .win-words {
+      display: flex;
+      justify-content: center;
+      gap: 0.7rem;
+      margin: 0 0 1.8rem;
+      padding: 0;
+      list-style: none;
+    }
+
+    .win-words li {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      flex: 1 1 0;
+      max-width: 120px;
+      padding: 0.6rem 0.4rem;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--ink);
+      background: #f7fbff;
+      border: 3px solid #e3f2fb;
+      border-radius: 20px;
+    }
+
+    .win-words img {
+      width: 100%;
+      max-width: 74px;
+      aspect-ratio: 1;
+      object-fit: contain;
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .btn--again {
+      padding: 0.9rem 2.4rem;
+      font-size: clamp(1.2rem, 3.6vw, 1.45rem);
+      color: #fff;
+      background: linear-gradient(180deg, #5fd7a3, var(--green));
+      border-radius: 999px;
+      box-shadow: 0 8px 0 var(--green-deep), 0 14px 22px rgba(37, 168, 111, 0.32);
+    }
+
+    .btn--again:hover { transform: translateY(-2px); }
+
+    .btn--again:active {
+      transform: translateY(6px);
+      box-shadow: 0 2px 0 var(--green-deep);
+    }
+
+    /* Confetti lives only inside the win screen */
+    .confetti {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .confetti__piece {
+      position: absolute;
+      top: -12%;
+      width: 10px;
+      height: 16px;
+      border-radius: 3px;
+      opacity: 0.95;
+      animation: fall linear forwards;
+    }
+
+    /* ---------- Animations ---------- */
+    @keyframes pop {
+      0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-4deg); }
+      50% { transform: translateY(-14px) rotate(5deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 8px 0 var(--orange-deep), 0 14px 22px rgba(239, 138, 42, 0.35); }
+      50% { box-shadow: 0 8px 0 var(--orange-deep), 0 18px 28px rgba(239, 138, 42, 0.5); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-4px); }
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(120vh) rotate(720deg); }
+    }
+
+    @media (max-width: 420px) {
+      body { padding: 12px; }
+      .home-card { padding: 2rem 1.2rem 1.6rem; border-radius: 30px; }
+      .quiz { padding: 1rem 0.7rem 1.2rem; border-radius: 28px; }
+      .answer { min-height: 64px; border-radius: 18px; }
+      .answers { gap: 0.6rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <!-- Home screen (visible before any interaction) -->
+    <section class="screen screen--home" id="homeScreen" aria-labelledby="homeTitle">
+      <span class="deco deco--1" aria-hidden="true">🍎</span>
+      <span class="deco deco--2" aria-hidden="true">🐶</span>
+      <span class="deco deco--3" aria-hidden="true">⭐</span>
+      <span class="deco deco--4" aria-hidden="true">👀</span>
+
+      <div class="home-card">
+        <span class="home-badge">Ages 3–6 · First words</span>
+        <h1 class="home-title" id="homeTitle">
+          <span class="w1">Let's</span> <span class="w2">learning</span><br />
+          <span class="w3">English</span>
+        </h1>
+        <p class="home-sub">Look at the picture, then tap the word that matches it.</p>
+        <button class="btn btn--start" id="startBtn" type="button">
+          Start <span aria-hidden="true">🚀</span>
+        </button>
+        <p class="home-hint">3 words · 3 cute pictures</p>
+      </div>
+    </section>
+
+    <!-- Quiz screen -->
+    <section class="screen screen--quiz" id="quizScreen" aria-labelledby="quizPrompt" hidden>
+      <div class="quiz">
+        <div class="quiz-top">
+          <div class="stars" id="stars" aria-hidden="true">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+          <p class="quiz-count" id="quizCount">Word 1 of 3</p>
+        </div>
+
+        <div class="picture">
+          <img id="quizImage" src="1.jpg" alt="" width="512" height="512" />
+        </div>
+
+        <p class="quiz-prompt" id="quizPrompt">What is this?</p>
+        <div class="answers" id="answers" role="group" aria-label="Choose the correct word"></div>
+        <p class="feedback" id="feedback" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <!-- Victory screen (hidden until question 3 is answered correctly) -->
+    <section class="screen screen--win" id="winScreen" aria-labelledby="winTitle" hidden>
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <div class="win-card">
+        <p class="win-kicker">🏆 Amazing!</p>
+        <h2 class="win-title" id="winTitle">You did it!</h2>
+        <p class="win-sub">You learned 3 new words today.</p>
+        <ul class="win-words">
+          <li><img src="1.jpg" alt="" /><span>apple</span></li>
+          <li><img src="2.jpg" alt="" /><span>dog</span></li>
+          <li><img src="3.jpg" alt="" /><span>eye</span></li>
+        </ul>
+        <button class="btn btn--again" id="againBtn" type="button">Play again</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var QUESTIONS = [
+        {
+          image: '1.jpg',
+          alt: 'A red apple',
+          prompt: 'What is this?',
+          correct: 'apple',
+          options: ['apple', 'banana', 'pear', 'grape']
+        },
+        {
+          image: '2.jpg',
+          alt: 'A little brown dog',
+          prompt: 'What is this?',
+          correct: 'dog',
+          options: ['dog', 'cat', 'mouse', 'bird']
+        },
+        {
+          image: '3.jpg',
+          alt: 'A blue eye',
+          prompt: 'What is this?',
+          correct: 'eye',
+          options: ['eye', 'hand', 'foot', 'nose']
+        }
+      ];
+
+      var homeScreen = document.getElementById('homeScreen');
+      var quizScreen = document.getElementById('quizScreen');
+      var winScreen = document.getElementById('winScreen');
+
+      var startBtn = document.getElementById('startBtn');
+      var againBtn = document.getElementById('againBtn');
+
+      var quizImage = document.getElementById('quizImage');
+      var quizCount = document.getElementById('quizCount');
+      var answersEl = document.getElementById('answers');
+      var feedbackEl = document.getElementById('feedback');
+      var stars = document.querySelectorAll('#stars .star');
+
+      var current = 0;
+      var locked = false;
+      var advanceTimer = null;
+
+      function showScreen(name) {
+        homeScreen.hidden = name !== 'home';
+        quizScreen.hidden = name !== 'quiz';
+        winScreen.hidden = name !== 'win';
+      }
+
+      function shuffle(list) {
+        var arr = list.slice();
+        for (var i = arr.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = arr[i];
+          arr[i] = arr[j];
+          arr[j] = tmp;
+        }
+        return arr;
+      }
+
+      function renderQuestion() {
+        var q = QUESTIONS[current];
+        locked = false;
+
+        quizImage.src = q.image;
+        quizImage.alt = q.alt;
+        quizCount.textContent = 'Word ' + (current + 1) + ' of ' + QUESTIONS.length;
+
+        for (var s = 0; s < stars.length; s++) {
+          stars[s].classList.toggle('is-on', s <= current);
+        }
+
+        feedbackEl.textContent = '';
+        feedbackEl.className = 'feedback';
+
+        answersEl.innerHTML = '';
+        answersEl.classList.remove('is-locked');
+
+        shuffle(q.options).forEach(function (word) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'answer';
+          btn.dataset.word = word;
+
+          var label = document.createElement('span');
+          label.className = 'answer__word';
+          label.textContent = word;
+
+          var mark = document.createElement('span');
+          mark.className = 'answer__mark';
+          mark.setAttribute('aria-hidden', 'true');
+
+          btn.appendChild(label);
+          btn.appendChild(mark);
+          btn.addEventListener('click', function () {
+            handleAnswer(btn, word);
+          });
+
+          answersEl.appendChild(btn);
+        });
+      }
+
+      function handleAnswer(btn, word) {
+        var q = QUESTIONS[current];
+        if (locked) return;
+        if (btn.classList.contains('is-wrong')) return;
+
+        if (word === q.correct) {
+          locked = true;
+          btn.classList.add('is-correct');
+          btn.querySelector('.answer__mark').textContent = '✓';
+
+          var all = answersEl.querySelectorAll('.answer');
+          for (var i = 0; i < all.length; i++) {
+            if (all[i] !== btn) all[i].classList.add('is-dim');
+          }
+          answersEl.classList.add('is-locked');
+
+          feedbackEl.textContent = 'Yes! It is ' + q.correct + '. 🎉';
+          feedbackEl.className = 'feedback feedback--good is-bounce';
+
+          advanceTimer = window.setTimeout(function () {
+            advanceTimer = null;
+            if (current === QUESTIONS.length - 1) {
+              startCelebration();
+            } else {
+              current += 1;
+              renderQuestion();
+            }
+          }, 900);
+        } else {
+          btn.classList.add('is-wrong');
+          btn.querySelector('.answer__mark').textContent = '✗';
+          btn.setAttribute('aria-disabled', 'true');
+
+          feedbackEl.textContent = 'Oops! Try again. 💪';
+          feedbackEl.className = 'feedback feedback--bad is-bounce';
+        }
+      }
+
+      function startGame() {
+        if (advanceTimer) {
+          window.clearTimeout(advanceTimer);
+          advanceTimer = null;
+        }
+        current = 0;
+        renderQuestion();
+        showScreen('quiz');
+      }
+
+      function startCelebration() {
+        showScreen('win');
+        launchConfetti();
+        againBtn.focus();
+      }
+
+      function launchConfetti() {
+        var box = document.getElementById('confetti');
+        box.innerHTML = '';
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var colors = ['#ff9f43', '#34c98a', '#4cc3f5', '#a78bfa', '#ffd93d', '#ff7aa2'];
+        var count = 60;
+
+        for (var i = 0; i < count; i++) {
+          var piece = document.createElement('span');
+          piece.className = 'confetti__piece';
+          piece.style.left = Math.random() * 100 + '%';
+          piece.style.background = colors[i % colors.length];
+          piece.style.animationDuration = (2.4 + Math.random() * 2) + 's';
+          piece.style.animationDelay = (Math.random() * 1.6) + 's';
+          piece.style.width = (6 + Math.random() * 8) + 'px';
+          piece.style.height = (10 + Math.random() * 10) + 'px';
+          piece.style.transform = 'rotate(' + Math.round(Math.random() * 180) + 'deg)';
+          box.appendChild(piece);
+        }
+
+        window.setTimeout(function () {
+          box.innerHTML = '';
+        }, 6000);
+      }
+
+      startBtn.addEventListener('click', startGame);
+      againBtn.addEventListener('click', startGame);
+    })();
+  </script>
+</body>
+</html>

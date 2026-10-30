@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive projects by Zhinan Zhang — a to-do app, a weather search, and an English word quiz for kids." />
+  <title>Projects — Zhinan Zhang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=16" />
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="nav" id="top">
+    <a href="index.html" class="nav__brand">Zhinan Zhang</a>
+    <nav class="nav__links">
+      <a href="home.html">Home</a>
+      <a href="resume.html">Resume</a>
+      <a href="projects.html" class="is-active" aria-current="page">Projects</a>
+      <a href="skills.html">Skills</a>
+      <a href="favorites.html">Favorites</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <button class="nav__toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main>
+    <!-- Projects -->
+    <section id="projects" class="section">
+      <div class="section__inner">
+        <header class="section__head">
+          <span class="section__index">03</span>
+          <h2 class="section__title">Projects</h2>
+        </header>
+        <div class="projects" id="projectGrid">
+          <!-- To-Do List App -->
+          <div class="todo-app" id="todoApp">
+            <header class="todo-app__head">
+              <div class="todo-app__head-row">
+                <h3 class="todo-app__title">To-Do List</h3>
+                <span class="todo-app__count" id="todoCount" aria-live="polite">0 of 0 tasks completed</span>
+              </div>
+              <p class="todo-app__sub">Pick a date, write a task, and press Add.</p>
+            </header>
+
+            <div class="todo-app__main">
+              <!-- Calendar -->
+              <div class="calendar" id="calendar">
+                <div class="calendar__header">
+                  <button type="button" class="calendar__nav" data-dir="prev" aria-label="Previous month">‹</button>
+                  <span class="calendar__title" id="calendarTitle">Month</span>
+                  <button type="button" class="calendar__nav" data-dir="next" aria-label="Next month">›</button>
+                </div>
+                <div class="calendar__weekdays" aria-hidden="true">
+                  <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                </div>
+                <div class="calendar__grid" id="calendarGrid" role="grid"></div>
+              </div>
+
+              <!-- Form + List -->
+              <div class="todo-app__side">
+                <form class="todo-form" id="todoForm">
+                  <label class="todo-form__selected">
+                    <span class="todo-form__selected-label">Selected date</span>
+                    <span class="todo-form__selected-date" id="selectedDateLabel">—</span>
+                  </label>
+                  <div class="todo-form__pickers">
+                    <div class="picker">
+                      <span class="picker__label">Emoji</span>
+                      <div class="picker__emojis" id="emojiPicker" role="group" aria-label="Pick an emoji">
+                        <button type="button" class="emoji-opt is-active" data-emoji="" aria-label="No emoji">∅</button>
+                        <button type="button" class="emoji-opt" data-emoji="📝" aria-label="Note">📝</button>
+                        <button type="button" class="emoji-opt" data-emoji="💼" aria-label="Work">💼</button>
+                        <button type="button" class="emoji-opt" data-emoji="🎯" aria-label="Goal">🎯</button>
+                        <button type="button" class="emoji-opt" data-emoji="💡" aria-label="Idea">💡</button>
+                        <button type="button" class="emoji-opt" data-emoji="🛒" aria-label="Shopping">🛒</button>
+                        <button type="button" class="emoji-opt" data-emoji="🔥" aria-label="Urgent">🔥</button>
+                        <button type="button" class="emoji-opt" data-emoji="❤️" aria-label="Personal">❤️</button>
+                      </div>
+                    </div>
+                    <div class="picker">
+                      <span class="picker__label">Priority</span>
+                      <div class="picker__priority" id="priorityPicker" role="group" aria-label="Pick a priority">
+                        <button type="button" class="pri-opt" data-priority="low">Low</button>
+                        <button type="button" class="pri-opt is-active" data-priority="medium">Medium</button>
+                        <button type="button" class="pri-opt" data-priority="high">High</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="todo-form__row">
+                    <input
+                      type="text"
+                      id="todoInput"
+                      class="todo-form__input"
+                      placeholder="Enter a task..."
+                      autocomplete="off"
+                      required
+                    />
+                    <button type="submit" class="todo-form__add">Add</button>
+                  </div>
+                </form>
+
+                <ul class="todo-list" id="todoList" aria-label="Tasks"></ul>
+
+                <p class="todo-empty" id="todoEmpty">No tasks yet. Add one above.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Weather App -->
+          <div class="weather-app" id="weatherApp">
+            <header class="weather-app__head">
+              <h3 class="weather-app__title">Weather</h3>
+              <p class="weather-app__sub">Search a city to see its current weather.</p>
+            </header>
+
+            <div class="weather-app__main">
+              <form class="weather-form" id="weatherForm">
+                <input
+                  type="text"
+                  id="weatherInput"
+                  class="weather-form__input"
+                  placeholder="Enter a city..."
+                  autocomplete="off"
+                  aria-label="City name"
+                />
+                <button type="submit" class="weather-form__search">Search</button>
+              </form>
+
+              <div class="weather-result" id="weatherResult" aria-live="polite">
+                <p class="weather-result__msg" id="weatherMessage">Enter a city to see its current weather.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- English Word Quiz -->
+          <a class="project" href="projects/english-words/index.html" target="_blank" rel="noopener">
+            <div class="project__media">
+              <img src="projects/english-words/1.jpg" alt="Preview of the English word quiz for kids" loading="lazy" />
+            </div>
+            <div class="project__body">
+              <h3 class="project__title">English Word Quiz</h3>
+              <p class="project__desc">
+                A playful picture quiz that helps children aged 3–6 learn their
+                first English words — apple, dog, and eye.
+              </p>
+              <ul class="project__tags">
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JavaScript</li>
+              </ul>
+              <span class="project__link">Play the quiz →</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer__fun-facts">
+      <h3 class="footer__heading">Fun Facts About Me</h3>
+      <ul class="footer__facts">
+        <li>😢 I cry a lot when feeling stressed or angry — it's my healthy way to calm down, and it really helps me.</li>
+      </ul>
+    </div>
+    <div class="footer__bar">
+      <p>© <span id="year">2026</span> Zhinan Zhang. Built with care.</p>
+      <a href="#top" class="footer__top">Back to top ↑</a>
+    </div>
+  </footer>
+
+  <script src="script.js?v=15"></script>
+</body>
+</html>
